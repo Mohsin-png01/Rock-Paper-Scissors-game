@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate Rock Paper Scissors</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            height: 100%;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .btn {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 18px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        .page {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+
+        .active {
+            display: block;
+            opacity: 1;
+        }
+
+        #instructions {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideUp 1s ease-out forwards;
+            animation-delay: 0.5s;
+        }
+
+        .choices {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .choice {
+            font-size: 4rem;
+            padding: 1.5rem;
+            cursor: pointer;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .choice:hover {
+            transform: scale(1.1) translateY(-5px);
+            background-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+
+        #result {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            min-height: 2rem;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        #score {
+            font-size: 1.4rem;
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .win { color: #4CAF50; }
+        .lose { color: #f44336; }
+        .draw { color: #ff9800; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px) rotate(-5deg); }
+            75% { transform: translateX(5px) rotate(5deg); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInTop {
+            from {
+                opacity: 0;
+                transform: translateY(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="landing-page" class="page active">
+            <h1>Ultimate Rock Paper Scissors</h1>
+            <div id="instructions">
+                <h2>How to Play</h2>
+                <p>1. Choose your move: Rock, Paper, or Scissors</p>
+                <p>2. The computer will randomly select its move</p>
+                <p>3. Rock beats Scissors, Scissors beats Paper, Paper beats Rock</p>
+                <p>4. First to win 5 rounds is the ultimate champion!</p>
+            </div>
+            <button class="btn" onclick="startGame()">Start Game</button>
+        </div>
+
+        <div id="game-page" class="page">
+            <h1>Rock Paper Scissors</h1>
+            <div class="choices">
+                <div class="choice" id="rock" onclick="playGame('rock')">✊</div>
+                <div class="choice" id="paper" onclick="playGame('paper')">✋</div>
+                <div class="choice" id="scissors" onclick="playGame('scissors')">✌️</div>
+            </div>
+            <div id="result"></div>
+            <div id="score">Player: 0 - Computer: 0</div>
+            <button class="btn" onclick="resetGame()" style="margin-top: 2rem;">Reset Game</button>
+        </div>
+    </div>
+
+    <script>
+        const choices = ['rock', 'paper', 'scissors'];
+        const resultDiv = document.getElementById('result');
+        const scoreDiv = document.getElementById('score');
+        let playerScore = 0;
+        let computerScore = 0;
+
+        function startGame() {
+            document.getElementById('landing-page').classList.remove('active');
+            document.getElementById('game-page').classList.add('active');
+            animateGameElements();
+        }
+
+        function animateGameElements() {
+            const rock = document.getElementById('rock');
+            const paper = document.getElementById('paper');
+            const scissors = document.getElementById('scissors');
+
+            rock.style.animation = 'slideInLeft 0.5s ease-out forwards';
+            paper.style.animation = 'slideInTop 0.5s ease-out forwards';
+            scissors.style.animation = 'slideInRight 0.5s ease-out forwards';
+
+            rock.style.animationDelay = '0.2s';
+            paper.style.animationDelay = '0.4s';
+            scissors.style.animationDelay = '0.6s';
+        }
+
+        function resetGame() {
+            playerScore = 0;
+            computerScore = 0;
+            updateScore();
+            resultDiv.textContent = '';
+            animateGameElements();
+        }
+
+        function computerChoice() {
+            return choices[Math.floor(Math.random() * 3)];
+        }
+
+        function determineWinner(playerChoice, computerChoice) {
+            if (playerChoice === computerChoice) return 'draw';
+            if (
+                (playerChoice === 'rock' && computerChoice === 'scissors') ||
+                (playerChoice === 'paper' && computerChoice === 'rock') ||
+                (playerChoice === 'scissors' && computerChoice === 'paper')
+            ) {
+                return 'win';
+            }
+            return 'lose';
+        }
+
+        function updateScore() {
+            scoreDiv.textContent = `Player: ${playerScore} - Computer: ${computerScore}`;
+            if (playerScore === 5 || computerScore === 5) {
+                const winner = playerScore === 5 ? 'Player' : 'Computer';
+                setTimeout(() => {
+                    alert(`Game Over! ${winner} wins!`);
+                    resetGame();
+                }, 100);
+            }
+        }
+
+        function displayResult(playerChoice, computerChoice, result) {
+            const resultText = result === 'win' ? 'You win!' : result === 'lose' ? 'You lose!' : 'It\'s a draw!';
+            resultDiv.textContent = `You chose ${playerChoice}. Computer chose ${computerChoice}. ${resultText}`;
+            resultDiv.className = result;
+        }
+
+        function playGame(playerChoice) {
+            const compChoice = computerChoice();
+            const result = determineWinner(playerChoice, compChoice);
+            displayResult(playerChoice, compChoice, result);
+            if (result === 'win') playerScore++;
+            if (result === 'lose') computerScore++;
+            updateScore();
+            
+            document.querySelectorAll('.choice').forEach(el => el.classList.add('shake'));
+            setTimeout(() => {
+                document.querySelectorAll('.choice').forEach(el => el.classList.remove('shake'));
+            }, 500);
+        }
+    </script>
+</body>
+</html>
